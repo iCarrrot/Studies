@@ -32,11 +32,11 @@ count(Acc,Op):-
 
 count(Acc,Op):-
 	Op=mul,!,
-	Acc=[pop,swapd,pop,div,push].
+	Acc=[pop,swapd,pop,mul,push].
 
 count(Acc,Op):-
 	Op=mod,!,
-	Acc=[pop,swapd,pop,div,shift,push].
+	Acc=[pop,swapd,pop,div,const,num(-16),swapd,shift,push].
 
 count(Acc,Op):-
 	Op=negat,!,
@@ -164,9 +164,9 @@ instructions([H|Tree],Exit,Number,NumberBack):-
 		E1 is Number + 1,
 		E2 is Number + 2, 
 		instructions(If,If_List,Number2,NumberBack2),
-		instrutions(Else,Else_List,NumberBack2,NumberBack3),
+		instructions(Else,Else_List,NumberBack2,NumberBack3),
 		After_Bool=[pop,swapd,const,where_jump(E1),swapa,swapd,branchz],
-		After_If=[const, where_jump(E2),swapa,jump,here_jump(E1)],
+		After_If=[const, where_jump(E2),jump,here_jump(E1)],
 		After_Else=[here_jump(E2)],
 		Ins=[Bool_List,After_Bool,If_List,After_If,Else_List,After_Else],
 		flatten(Ins,Exit2),

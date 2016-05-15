@@ -3,6 +3,18 @@
 	var_list(Dec,Vars),
 	instructions(Tree, List,Number).*/
 
+
+
+
+
+main(FileName):-!,
+	readfile(FileName, CharCodeList),
+	assembly(CharCodeList,Exit),
+	writefile('result',Exit),!
+	.
+
+
+
 assembly(CharCodeList,Exit):-
 	parse(CharCodeList,(Vars,Tree)),
 	var_list(Vars,Var_list),
@@ -14,22 +26,56 @@ assembly(CharCodeList,Exit):-
 	czysc([const,num(65535),swapa,const,num(65533),store|List2],Czysta),
 	%write(Czysta),
 	podstaw(Czysta,Podstawiona,End),
-	make_fours(Podstawiona,Exit,0,Plength),
-	make_adress
-	/*write(Czworki),
+	make_fours(Podstawiona,Czworki,0,Plength),
+	%write(Czworki),
+	make_adress(Plength,Var_list,Var_Dic),
 	slownik_etykiet(Czworki,Dic),
-	write(Dic),
-	zamiana_etykiet(Czworki,Dic,_)*/
+	zamiana_etykiet(Czworki,Dic,Po_Et),
+	%write(Po_Et),
+	zamiana_etykiet_var(Po_Et,Var_Dic,Po_var),
+	%write(Po_var),
+	na_numerki(Po_var,Decimal),
+	printHex(Decimal,Exit)
 	.
 	%write(Exit)
 	%Exit=List
 
-var_list(EnterL,List):-flatten(EnterL,List).
+printHex([],[]):-!.
+printHex([H|T],[A|Exit]) :-
+  format(atom(A),'~|~`0t~16r~4+', H),
+  printHex(T,Exit).
+
+
+na_numerki([H|T],[X2|Exit]):-
+	H=[lin(_),num(X)],
+	X<0,!,
+	X2 is 32768+(32768+X),
+	na_numerki(T,Exit),!.
+
+na_numerki([H|T],[X|Exit]):-
+	H=[lin(_),num(X)],!,
+	na_numerki(T,Exit),!.
+
+na_numerki([H|T],[X|Exit]):-
+	take_last(H,4,List),!,
+	List=[H1,H2,H3,H4],
+	numer_rozkazu(H1,H11),
+	numer_rozkazu(H2,H21),
+	numer_rozkazu(H3,H31),
+	numer_rozkazu(H4,H41),
+	X is H11*16*16*16+H21*16*16+H31*16+H41,
+	na_numerki(T,Exit),!.
+na_numerki([],[]):-!.
+
+
+
+var_list(EnterL,List):-flatten(EnterL,List),!.
 make_adress(Plength,[H|List],[H2|List2]):-
 	P2 is Plength+1,
-	H2=[H,P2],
+	H=var(_),
+	H2=[num(P2),H],
 	make_adress(P2,List,List2).
-make_adress(_,[],[]).
+make_adress(_,[],[]):-!.
 
 zamiana_etykiet([H|List],Dic,[H1|Exit]):-
 	H=[lin(L),where_jump(X)],!,
@@ -41,14 +87,43 @@ zamiana_etykiet([H|List],Dic,[H|Exit]):-
 	zamiana_etykiet(List,Dic,Exit),!.
 zamiana_etykiet([],_,[]):-!.
 
+
+zamiana_etykiet_var([H|List],Dic,[H1|Exit]):-
+	H=[lin(L),var(X)],!,
+	member([num(A),var(X)],Dic),
+	H1=[lin(L),num(A)],
+	zamiana_etykiet_var(List,Dic,Exit),!.
+
+zamiana_etykiet_var([H|List],Dic,[H|Exit]):-
+	zamiana_etykiet_var(List,Dic,Exit),!.
+zamiana_etykiet_var([],_,[]):-!.
+
 slownik_etykiet([H|List],[H1|Dic]):-
 	H=[lin(X),here_jump(A)|_],!,
 	H1=[num(X),here_jump(A)],
 	slownik_etykiet(List,Dic).
 slownik_etykiet([_|List],Dic):-
 	slownik_etykiet(List,Dic),!.
-slownik_etykiet([],[]).
+slownik_etykiet([],[]):-!.
 
+
+
+numer_rozkazu(nop,0):-!.
+numer_rozkazu(syscall,1):-!.
+numer_rozkazu(load,2):-!.
+numer_rozkazu(store,3):-!.
+numer_rozkazu(swapa,4):-!.
+numer_rozkazu(swapd,5):-!.
+numer_rozkazu(branchz,6):-!.
+numer_rozkazu(branchn,7):-!.
+numer_rozkazu(jump,8):-!.
+numer_rozkazu(const,9):-!.
+numer_rozkazu(add,10):-!.
+numer_rozkazu(sub,11):-!.
+numer_rozkazu(mul,12):-!.
+numer_rozkazu(div,13):-!.
+numer_rozkazu(shift,14):-!. 
+numer_rozkazu(nand,15):-!. 
 
 
 make_fours([],[],X,X):-!.	
@@ -123,7 +198,9 @@ czworka([H|Lista],Exit,X,Y,End):-
 
 czworka([],Exit,0,Y,[]):-
 	noping(Y,Exit),Y=\=0,!.
-czworka(_,[],0,0,[]).
+
+czworka(_,[],0,0,[]):-!.
+
 noping(C,List):-
 	C < 1,!,
 	List=[].
@@ -160,8 +237,9 @@ podstaw([H|T],Exit,Number):-
 	E2 is Number +2,
 	E3 is Number +3,
 	E4 is Number +4,
-	End is Number +5,
-	List=[swapa, const, where_jump(E1),swapa,branchn,swapd,swapa,const,where_jump(E2),swapa,branchn,swapa,const,where_jump(E3),swapa,jump,here_jump(E2),const,where_jump(End),swapa,const,num(0),jump,here_jump(E1),swapd,swapa,const,where_jump(E3),swapa,branchn,const,where_jump(End),swapa, const,num(1),jump,here_jump(E3),swapd,sub,swapd,const,where_jump(E4),swapa,swapd,branchn,const,where_jump(End),swapa,const,num(0),jump,here_jump(E4),const,num(1),here_jump(End)],
+	E5 is Number +5,
+	End is Number +6,
+	List=[swapa, const, where_jump(E1),swapa,branchn,swapd,swapa,const,where_jump(E2),swapa,branchn,swapa,const,where_jump(E5),jump,here_jump(E2),const,where_jump(End),swapd,const,num(0),swapd,jump,here_jump(E1),swapd,swapa,const,where_jump(E3),swapa,branchn,const,where_jump(End),swapd, const,num(1),swapd,jump,here_jump(E5),swapa,here_jump(E3),swapd,sub,swapd,const,where_jump(E4),swapa,swapd,branchn,const,where_jump(End),swapd,const,num(0),swapd,jump,here_jump(E4),const,num(1),here_jump(End),swapd],
 	podstaw(T,Exit2,End),
 	append(List,Exit2,Exit).
 
@@ -171,8 +249,9 @@ podstaw([H|T],Exit,Number):-
 	E2 is Number +2,
 	E3 is Number +3,
 	E4 is Number +4,
-	End is Number +5,
-	List=[swapd,swapa, const, where_jump(E1),swapa,branchn,swapd,swapa,const,where_jump(E2),swapa,branchn,swapa,const,where_jump(E3),swapa,jump,here_jump(E2),const,where_jump(End),swapa,const,num(0),jump,here_jump(E1),swapd,swapa,const,where_jump(E3),swapa,branchn,const,where_jump(End),swapa, const,num(1),jump,here_jump(E3),swapd,sub,swapd,const,where_jump(E4),swapa,swapd,branchn,const,where_jump(End),swapa,const,num(0),jump,here_jump(E4),const,num(1),here_jump(End)],
+	E5 is Number +5,
+	End is Number +6,
+	List=[swapd,swapa, const, where_jump(E1),swapa,branchn,swapd,swapa,const,where_jump(E2),swapa,branchn,swapa,const,where_jump(E5),jump,here_jump(E2),const,where_jump(End),swapd,const,num(0),swapd,jump,here_jump(E1),swapd,swapa,const,where_jump(E3),swapa,branchn,const,where_jump(End),swapd, const,num(1),swapd,jump,here_jump(E5),swapa,here_jump(E3),swapd,sub,swapd,const,where_jump(E4),swapa,swapd,branchn,const,where_jump(End),swapd,const,num(0),swapd,jump,here_jump(E4),const,num(1),here_jump(End),swapd],
 	podstaw(T,Exit2,End),
 	append(List,Exit2,Exit).
 
@@ -182,8 +261,9 @@ podstaw([H|T],Exit,Number):-
 	E2 is Number +2,
 	E3 is Number +3,
 	E4 is Number +4,
-	End is Number +5,
-	List=[swapa, const, where_jump(E1),swapa,branchn,swapd,swapa,const,where_jump(E2),swapa,branchn,swapa,const,where_jump(E3),swapa,jump,here_jump(E2),const,where_jump(End),swapa,const,num(0),jump,here_jump(E1),swapd,swapa,const,where_jump(E3),swapa,branchn,const,where_jump(End),swapa, const,num(1),jump,here_jump(E3),swapd,sub,swapd,const,where_jump(E4),swapa,swapd,branchn,branchz,const,where_jump(End),swapa,const,num(0),jump,here_jump(E4),const,num(1),here_jump(End)],
+	E5 is Number +5,
+	End is Number +6,
+	List=[swapa, const, where_jump(E1),swapa,branchn,swapd,swapa,const,where_jump(E2),swapa,branchn,swapa,const,where_jump(E5),jump,here_jump(E2),const,where_jump(End),swapd,const,num(0),swapd,jump,here_jump(E1),swapd,swapa,const,where_jump(E3),swapa,branchn,const,where_jump(End),swapd, const,num(1),swapd,jump,here_jump(E5),swapa,here_jump(E3),swapd,sub,swapd,const,where_jump(E4),swapa,swapd,branchn,branchz,const,where_jump(End),swapd,const,num(0),swapd,jump,here_jump(E4),const,num(1),here_jump(End),swapd],
 	podstaw(T,Exit2,End),
 	append(List,Exit2,Exit).
 
@@ -193,8 +273,9 @@ podstaw([H|T],Exit,Number):-
 	E2 is Number +2,
 	E3 is Number +3,
 	E4 is Number +4,
-	End is Number +5,
-	List=[swapd,swapa, const, where_jump(E1),swapa,branchn,swapd,swapa,const,where_jump(E2),swapa,branchn,swapa,const,where_jump(E3),swapa,jump,here_jump(E2),const,where_jump(End),swapa,const,num(0),jump,here_jump(E1),swapd,swapa,const,where_jump(E3),swapa,branchn,const,where_jump(End),swapa, const,num(1),jump,here_jump(E3),swapd,sub,swapd,const,where_jump(E4),swapa,swapd,branchn,branchz,const,where_jump(End),swapa,const,num(0),jump,here_jump(E4),const,num(1),here_jump(End)],
+	E5 is Number +5,
+	End is Number +6,
+	List=[swapd,swapa, const, where_jump(E1),swapa,branchn,swapd,swapa,const,where_jump(E2),swapa,branchn,swapa,const,where_jump(E5),jump,here_jump(E2),const,where_jump(End),swapd,const,num(0),swapd,jump,here_jump(E1),swapd,swapa,const,where_jump(E3),swapa,branchn,const,where_jump(End),swapd, const,num(1),swapd,jump,here_jump(E5),swapa,here_jump(E3),swapd,sub,swapd,const,where_jump(E4),swapa,swapd,branchn,branchz,const,where_jump(End),swapd,const,num(0),swapd,jump,here_jump(E4),const,num(1),here_jump(End),swapd],
 	podstaw(T,Exit2,End),
 	append(List,Exit2,Exit).
 
@@ -202,7 +283,7 @@ podstaw([H|T],Exit,Number):-
 	H=neq,!,
 	E1 is Number +1,
 	End is Number +2,
-	List=[swapa,const,where_jump(E1),swapa, sub,branchz,const,where_jump(End),swapa,const,num(1),jump,here_jump(E1),const,num(0),here_jump(End)],
+	List=[swapa,const,where_jump(E1),swapa, sub,branchz,const,where_jump(End),swapd,const,num(1),swapd,jump,here_jump(E1),const,num(0),swapd,here_jump(End),swapd],
 	podstaw(T,Exit2,End),
 	append(List,Exit2,Exit).
 
@@ -210,7 +291,7 @@ podstaw([H|T],Exit,Number):-
 	H=eq,!,
 	E1 is Number +1,
 	End is Number +2,
-	List=[swapa,const,where_jump(E1),swapa, sub,branchz,const,where_jump(End),swapa,const,num(0),jump,here_jump(E1),const,num(1),here_jump(End)],
+	List=[swapa,const,where_jump(E1),swapa, sub,branchz,const,where_jump(End),swapd,const,num(0),swapd,jump,here_jump(E1),const,num(1),here_jump(End),swapd],
 	podstaw(T,Exit2,End),
 	append(List,Exit2,Exit).
 
@@ -229,4 +310,56 @@ drop(0,LastElements,LastElements) :- !.
 drop(N,[_|Tail],LastElements) :-
 	N > 0,
 	N1 is N  - 1,
- 	drop(N1,Tail,LastElements).
+ 	drop(N1,Tail,LastElements),!.
+
+ countin([_|T],N):-
+ 	countin(T,N1),
+ 	N is N1+1.
+ countin([],0).
+
+ take_last(List,Number,Exit):-
+ 	countin(List,X),
+ 	X2 is X-Number,
+ 	drop(X2,List,Exit),!.
+
+
+
+writefile(FileName,List):-
+	open(FileName,write,Stream),
+	loop(Stream,List),
+	close(Stream).
+
+loop(_,[]):-!.
+loop(Stream,[H|T]):-
+	write(Stream,H),
+	write(Stream,' '),
+	loop(Stream, T).
+
+writefile2(FileName,List):-
+	open(FileName,write,Stream),
+	loop2(Stream,List),
+	close(Stream).
+
+loop2(_,[]):-!.
+loop2(Stream,[num(A)|T]):-!,
+	write(Stream,num(A)),
+	write(Stream,'\n'),
+	loop2(Stream, T).
+loop2(Stream,[A,B,C,D|T]):-
+	loop(Stream,[A,B,C,D]),
+	write(Stream,'\n'),
+	loop2(Stream,T).
+	
+readfile(FileName, List) :-
+	open(FileName, read, Stream),
+	createlist(Stream,List),
+	close(Stream).
+
+createlist(Stream, T):-
+	get_code(Stream, H),
+	coss(H,T,Stream).
+coss(H,T,_):-
+	H = -1,!,
+	T = [].
+coss(H, [H|T],Stream):-
+	createlist(Stream,T).

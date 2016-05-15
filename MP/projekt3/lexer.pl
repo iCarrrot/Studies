@@ -175,17 +175,15 @@ instrukcja(Ins)-->zmienna(X),
 				wyrazenie_logiczne(Bool),
 				[tokThen],
 				instrukcja_zlozona(List),
-				[tokFi],
-				{Ins=if(Bool,[_,_|List])}
+				(
+				[tokFi],!,
+				{Ins=if(Bool,List)}
 			;
-				[tokIf],
-				wyrazenie_logiczne(Bool),
-				[tokThen],
-				instrukcja_zlozona(List),
 				[tokElse],
 				instrukcja_zlozona(List2),
 				[tokFi],
-				{Ins=ifElse(Bool,[_,_|List],[_,_|List2])}
+				{Ins=ifElse(Bool,List,List2)}
+				)
 			;
 				[tokWhile],
 				wyrazenie_logiczne(Bool),
@@ -250,12 +248,14 @@ operator_multiplikatywny(Op)-->
 			;
 				[tokTimes],
 				{Op=mul}.
+
 czynnik(Cz)-->[tokMinus],
 				wyrazenie_proste(Cz1),
 				{Cz=[Cz1,negat]};
 			wyrazenie_proste(Cz).
 				
-wyrazenie_proste(W)-->				[tokLParen],
+wyrazenie_proste(W)-->				
+				[tokLParen],
 				wyrazenie_arytmetyczne(W),
 				[tokRParen];
 			wyrazenie_atomowe(W).
@@ -307,7 +307,7 @@ warunek(A)-->	[tokNot],!,
 
 
 wyrazenie_relacyjne(A)-->
-				[tokLParen],!,
+				[tokLParen],
 				wyrazenie_logiczne(W),
 				[tokRParen],
 				{A=W}
@@ -341,6 +341,8 @@ liczba(Exit)-->
 
 parse(CharCodeList, Absynt) :-
    phrase(lexer(TokList), CharCodeList),
+   %write(TokList),
    phrase(program(Absynt), TokList).
+   %write(Absynt).
  %phrase(program(X),[tokProgram,tokId(Suma),tokLocal,tokId(x),tokComma,tokId(s),tokBegin,tokId(s),tokAssgn,tokNumber(0),tokSColon,tokRead,tokId(x),tokSColon,tokWhile,tokId(x),tokNeq,tokNumber(0),tokDo,tokId(s),tokAssgn,tokId(s),tokPlus,tokId(x),tokSColon,tokRead,tokId(x),tokDone,tokSColon,tokWrite,tokId(s),tokEnd]).
 % TWI, Mar 15, 2009 && MRCHW Apr 30,2016.
