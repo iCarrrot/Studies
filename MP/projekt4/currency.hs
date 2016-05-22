@@ -1,3 +1,5 @@
+--część programu wzorowana na podręczniku "INTRODUCTION TO FUNCTIONAL PROGRAMMING" by Richard Bird and Philip Wadler
+
 module Verbally (Typeo(..), Currency(..), verbally) where
     data Typeo = None deriving Show
     data Currency = Currency {
