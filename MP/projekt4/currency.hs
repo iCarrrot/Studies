@@ -1,5 +1,7 @@
 --część programu wzorowana na podręczniku "INTRODUCTION TO FUNCTIONAL PROGRAMMING" by Richard Bird and Philip Wadler
+--zapytać o parser, jakie nazwy walut, czy dwa rożne pliki
 
+ 
 module Verbally (Typeo(..), Currency(..), verbally) where
     data Typeo = None deriving Show
     data Currency = Currency {
@@ -78,16 +80,16 @@ module Verbally (Typeo(..), Currency(..), verbally) where
 
     big k = biga!!(k`mod`10)++bigb!!((k`mod`100)`div`10)++bigc!!(k`div`100)
 
-    small=["","mi","bi","try","kwadry","kwinty","seksty","septy","okty","noni"]
+    small=["","mi","bi","tri","kwadri","kwinti","seksti","septi","okti","noni"]
     biga=["","un","do","tri","kwatuor","kwin","seks","septen","okto","nowem"]
-    bigb=["","decy","wicy","trycy","kwadragi","kwintagi","seksginty","septagi","oktagi","nonagi"]
-    bigc=["","centy","ducenty","trycenty","kwadryge","kwinge"," sescenty","septynge","oktynge","nonge"]
+    bigb=["","deci","wici","tryci","kwadragi","kwintagi","seksginti","septagi","oktagi","nonagi"]
+    bigc=["","centi","ducenti","trycenti","kwadrygi","kwinge"," sescenti","septynge","oktynge","nonge"]
 
 
     bignumber n i
         |n==0 = ""
-        |n==1 = " "++(przedrostek i )++"lion "
-        |otherwise = " "++(przedrostek i) ++ "lions "
+        |n==1 = " "++(przedrostek i )++"llion "
+        |otherwise = " "++(przedrostek i) ++ "llions "
 
     aud = Currency "Australian Dollar" "Australian Dollars" "Australian Dollars" None
     bgn = Currency "Lev" "Levs" "Levs" None
