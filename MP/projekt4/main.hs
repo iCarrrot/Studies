@@ -43,7 +43,7 @@ strToCurr z
  |z=="UAH" = Currency "Hryvnia" "Hryvnias" "Hryvnias" None
  |z=="USD" = Currency "US Dollar" "US Dollars" "US Dollars" None
  |z=="ZAR" = Currency "Rand" "Rands" "Rands" None
- |otherwise = Currency "Unknown Dollar" "Unknown Dollars" "Unknown Dollars" None
+ |otherwise = Currency "Unknown mrchw Dollar" "Unknown mrchw Dollars" "Unknown mrchw Dollars" None
 
  
 {-
