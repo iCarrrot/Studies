@@ -88,3 +88,14 @@ let loop t = loop2 t
  	|true, false-> t(pos_root)+sum_(right_subtree)
  	|false, true-> t(pos_root)+sum_(left_subtree)
  	|false, false-> t(pos_root);;
+
+ let sum_ t = let aux t acc =
+ 	if (is_empty t) then 0 else 
+ 	match is_empty (left_subtree t), is_empty (right_subtree t) with
+ 	|true,true -> t(pos_root)+sum_(left_subtree)+sum_(right_subtree)
+ 	|true, false-> t(pos_root)+sum_(right_subtree)
+ 	|false, true-> t(pos_root)+sum_(left_subtree)
+ 	|false, false-> t(pos_root);;
+
+ in
+ 	aux t 0;;
