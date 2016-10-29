@@ -51,13 +51,16 @@ void setup(void) {
   pinMode(led2, OUTPUT);
 }
 void loop(void) {
+    analogWrite(led1,255);
+    analogWrite(led2,255);
+    analogWrite(led3,255);
     brightR1=random(0,256);
     brightR2=random(0,256);
     brightR3=random(0,256);
   for (int i=0;i<sizeof(sinus);i++){
-    bright1=map(sinus[i],0,156,0,brightR1);
-    bright2=map(sinus[i],0,156,0,brightR2);
-    bright3=map(sinus[i],0,156,0,brightR3);
+    bright1=map(sinus[i],0,156,255,brightR1);
+    bright2=map(sinus[i],0,156,255,brightR2);
+    bright3=map(sinus[i],0,156,255,brightR3);
     analogWrite(led1,bright1);
     analogWrite(led2,bright2);
     analogWrite(led3,bright3);
@@ -65,9 +68,9 @@ void loop(void) {
   }
   delay(del*100);
   for (int i=sizeof(sinus)-1;i>=0;i--){
-    bright1=map(sinus[i],0,156,0,brightR1);
-    bright2=map(sinus[i],0,156,0,brightR2);
-    bright3=map(sinus[i],0,156,0,brightR3);
+    bright1=map(sinus[i],0,156,255,brightR1);
+    bright2=map(sinus[i],0,156,255,brightR2);
+    bright3=map(sinus[i],0,156,255,brightR3);
     analogWrite(led1,bright1);
     analogWrite(led2,bright2);
     analogWrite(led3,bright3);
