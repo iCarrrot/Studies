@@ -18,7 +18,7 @@ let rec bin_length (i : int) : int =
     if i = 0 || abs i = 1 then 1
                           else bin_length (i / 2) + 1
 
-
+let root_pos=1
 
 
 (* nat library *)
@@ -89,7 +89,7 @@ let nadd (n1 : nat) (n2 : nat) : nat =
         | [],      []      -> rev_app a (if c then [c] else [])
     in
         aux n1 n2 false []   
-
+(*
 let nsub (n1 : nat) (n2 : nat) : nat =
     let bit_sum b1 b2 c =
         let c' = b1 && b2 || b1 && c || b2 && c in
@@ -109,7 +109,7 @@ let nsub (n1 : nat) (n2 : nat) : nat =
     in
        let h::rest= aux n1 n2 false []
        in  
-       	if (h=true)then [false]else h::rest 
+       	if (h=true)then [false]else h::rest *)
 
 let nmul2 (n : nat) : nat =
     false::n
@@ -130,5 +130,16 @@ let nmod2 ((b::_) : nat) : int =
 let rec nilsl (n : nat) (s : int) : nat =
     if s <= 0 then n else nilsl (nmul2 n) (s-1)
 ;;
-nless_eq2 [true;true;true;true] [true; true; true;true;true] ;;
+
+let rec only_right p =
+    p = root_pos || nmod2 p = 1 && only_right (ndiv2 p)
+let t_right1 (d : int) : int flbt =
+  (fun p -> if nless p (nilsl (i2n 1) d) && only_right p
+    then 1
+    else raise NIT);;
+(* zakladamy, ze mamy zdefiniowany taki wyjatek;
+NIT oznacza Not In Tree, analogicznie do
+NIL, który oznacza Not In List *)
+
+(*nless_eq2 [true;true;true;true] [true; true; true;true;true] ;;*)
 rev_app [true;true;false;true] [false;true;true];;

@@ -39,26 +39,21 @@ let nless_eq2 (n1 : nat) (n2 : nat) : bool =
         aux n1 n2 true
 
 let nsub (n1 : nat) (n2 : nat) : nat =
-    let bit_sum b1 b2 c =
-        let c' = b1 && b2 || b1 && c || b2 && c in
-        let b' = not c' && (b1 || b2 || c) || b1 && b2 && c
-        in
+    let bit_sub b1 b2 c =
+        let c' = (not b1 && b2)||(not b1 && c)||(b1&&c&&b2)in
+        let b' = (not c&&(b1||b2)&& not(b1&&b2))||((not c &&c'))||(c &&(b1&&b2||not b1&& not b2) ) in
             (b', c')
     in
     let rec aux n1 n2 c a =
         match n1, n2 with
-        | b1::n1', b2::n2' -> let (b', c') = bit_sum b1 (not b2) c in
+        | b1::n1', b2::n2' -> let (b', c') = bit_sub b1 b2 c in
                               aux n1' n2' c' (b'::a)
-        | [],      _::_    -> if c then aux [false] n2 c a
-                                   else rev_app a n2
+        | [],      _::_    -> [false]
         | _::_,    []      -> if c then aux n1 [false] c a
                                    else rev_app a n1
-        | [],      []      -> rev_app a (if c then [c] else [])
+        | [],      []      ->  (if c then [false] else rev_app a [] )
     in
-       
-        aux (false::n1) (n2) false []
-       (*let h::rest= aux n1 n2 false []
-       in  
-        if (h=true)then [false]else rest*) ;;
+        aux n1 n2 false []  
+    ;;
 
-nsub [true;true] [false;true] ;;
+nsub [false; false; true] [false;true] ;;
