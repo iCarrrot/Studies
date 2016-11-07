@@ -47,7 +47,7 @@ type aritm_literal = Neg | Add | Sub | Mul | Div | Pow | Num of float
 
 exception IllegalOperation of (aritm_literal* float	* float)
 exception TooFewOperations
-
+exception TooMuchOperations
 
 let eval_rpm (a_list:aritm_literal list) : float=
 	let operations operator arg1 arg2 : float=
@@ -63,9 +63,8 @@ let eval_rpm (a_list:aritm_literal list) : float=
 			match a_list with
 			|  Num x ::xs-> aux xs (x::acc)
 			| Neg::xs -> let y::ys = acc in aux xs ((-1.0*.y)::ys)
-			|x::xs -> let y1::y2::ys =acc in aux xs ((operations x y2 y1)::ys)
+			|x::xs -> try (let y1::y2::ys =acc in aux xs ((operations x y2 y1)::ys)) with _ -> raise TooMuchOperations
 			|[]-> let y::ys=acc in if ys=[] then y else raise TooFewOperations
 		in
 			aux a_list []
-
 
