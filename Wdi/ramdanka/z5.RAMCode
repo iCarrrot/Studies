@@ -1,0 +1,40 @@
+    read  1   #n
+    read  2   #m
+    load  2
+    sub   1
+    jgtz  Z1
+C: 
+
+B:  load  2
+    jgtz  P
+    write 1
+    halt  
+
+
+P:  load  1   #n=n mod m
+    div   2
+    mult  2
+    sub   1
+    mult  =-1
+    store 1
+    load  2
+    sub   1
+    jgtz  Z2
+D:  jump  B
+
+
+Z1: load  1
+    store 10  #t;=n
+    load  2
+    store 1   #n:=m
+    load  10
+    store 2   #m:=t
+    jump  C
+
+Z2: load  1
+    store 10  #t;=n
+    load  2
+    store 1   #n:=m
+    load  10
+    store 2   #m:=t
+    jump  D

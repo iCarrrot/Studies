@@ -1,0 +1,22 @@
+     read  1
+     read  2
+     read  3
+     load  1
+     add   2
+     sub   3
+     jgtz  OK
+     write =0
+     halt  
+OK:  load  2
+     add   3
+     sub   1
+     jgtz  OK2
+     write =0
+     halt  
+OK2: load  3
+     add   1
+     sub   2
+     jgtz  OK3
+     write =0
+     halt  
+OK3: write =1

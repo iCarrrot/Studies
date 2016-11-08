@@ -59,12 +59,12 @@ let eval_rpm (a_list:aritm_literal list) : float=
 			| Pow -> try arg1**arg2 with _ -> raise (IllegalOperation(operator,arg1,arg2))
 			| _ -> raise (IllegalOperation(operator,arg1,arg2))
 	in
-		let rec aux a_list acc =
+		let rec aux (a_list:aritm_literal list) acc =
 			match a_list with
-			|  Num x ::xs-> aux xs (x::acc)
+			| Num x ::xs-> aux xs (x::acc)
 			| Neg::xs -> let y::ys = acc in aux xs ((-1.0*.y)::ys)
-			|x::xs -> try (let y1::y2::ys =acc in aux xs ((operations x y2 y1)::ys)) with _ -> raise TooMuchOperations
-			|[]-> let y::ys=acc in if ys=[] then y else raise TooFewOperations
+			| x::xs -> try ( aux xs ((operations x y2 y1)::ys)) with _ -> raise TooMuchOperations
+			| [] -> let y::ys=acc in if ys=[] then y else raise TooFewOperations
 		in
 			aux a_list []
 

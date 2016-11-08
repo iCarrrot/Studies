@@ -1,0 +1,20 @@
+   read  1
+   load  1
+   add   =2
+   store 2
+
+B: load  2
+   read  ^2
+   sub   =1
+   store 2
+   sub   =2
+   jgtz  B
+
+A: load  2
+   add   =1
+   store 2
+   write ^2
+   load  1
+   sub   2
+   add   =2
+   jgtz  A
