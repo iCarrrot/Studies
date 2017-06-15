@@ -1,9 +1,0 @@
-C:\Users\michal\Documents\PO\lista 3\zadanie_1\zadanie_1\bin\Debug\zadanie_1.exe.config
-C:\Users\michal\Documents\PO\lista 3\zadanie_1\zadanie_1\bin\Debug\zadanie_1.exe
-C:\Users\michal\Documents\PO\lista 3\zadanie_1\zadanie_1\bin\Debug\zadanie_1.pdb
-C:\Users\michal\Documents\PO\lista 3\zadanie_1\zadanie_1\obj\Debug\zadanie_1.csprojResolveAssemblyReference.cache
-C:\Users\michal\Documents\PO\lista 3\zadanie_1\zadanie_1\obj\Debug\zadanie_1.exe
-C:\Users\michal\Documents\PO\lista 3\zadanie_1\zadanie_1\obj\Debug\zadanie_1.pdb
-C:\Users\michal\Documents\PO\1_C#\lista 3\zadanie_1\zadanie_1\bin\Debug\zadanie_1.exe.config
-C:\Users\michal\Documents\PO\1_C#\lista 3\zadanie_1\zadanie_1\obj\Debug\zadanie_1.exe
-C:\Users\michal\Documents\PO\1_C#\lista 3\zadanie_1\zadanie_1\obj\Debug\zadanie_1.pdb

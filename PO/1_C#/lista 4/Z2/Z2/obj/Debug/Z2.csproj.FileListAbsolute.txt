@@ -1,6 +1,0 @@
-C:\Users\michal\Documents\PO\lista 4\Z2\Z2\bin\Debug\Z2.exe.config
-C:\Users\michal\Documents\PO\lista 4\Z2\Z2\obj\Debug\Z2.csprojResolveAssemblyReference.cache
-C:\Users\michal\Documents\PO\lista 4\Z2\Z2\bin\Debug\Z2.exe
-C:\Users\michal\Documents\PO\lista 4\Z2\Z2\bin\Debug\Z2.pdb
-C:\Users\michal\Documents\PO\lista 4\Z2\Z2\obj\Debug\Z2.exe
-C:\Users\michal\Documents\PO\lista 4\Z2\Z2\obj\Debug\Z2.pdb
