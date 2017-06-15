@@ -1,0 +1,26 @@
+package z7;
+
+import java.io.Serializable;
+
+public class Ksiazka implements Serializable
+{
+	private static final long serialVersionUID = 4661681646491395516L;
+	public String Tytul, autor;
+	public int wydanie;
+	
+	public Ksiazka(String T, String a, int w)
+	{
+		Tytul = T; autor = a; wydanie = w;
+	}
+	String klasa;
+	public Ksiazka(String klasa) { 
+	
+	this("Tytul", "Autor", 11111); 
+	this.klasa=klasa;} 
+
+	public String toString()
+	{
+		return klasa+": " +Tytul + "\n" + autor + "\n" + Integer.toString(wydanie);
+	}
+
+}

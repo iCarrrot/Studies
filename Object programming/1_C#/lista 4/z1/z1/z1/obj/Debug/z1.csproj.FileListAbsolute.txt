@@ -1,0 +1,6 @@
+C:\Users\michal\Documents\PO\lista 4\z1\z1\z1\bin\Debug\z1.exe.config
+C:\Users\michal\Documents\PO\lista 4\z1\z1\z1\bin\Debug\z1.exe
+C:\Users\michal\Documents\PO\lista 4\z1\z1\z1\bin\Debug\z1.pdb
+C:\Users\michal\Documents\PO\lista 4\z1\z1\z1\obj\Debug\z1.csprojResolveAssemblyReference.cache
+C:\Users\michal\Documents\PO\lista 4\z1\z1\z1\obj\Debug\z1.exe
+C:\Users\michal\Documents\PO\lista 4\z1\z1\z1\obj\Debug\z1.pdb

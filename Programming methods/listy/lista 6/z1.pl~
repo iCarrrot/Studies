@@ -1,0 +1,9 @@
+put_s(E,S,[E|S]).
+get_s([H|T],H,T).
+empty_s([]).
+addall_s(E,G,S,R):-
+	findall(E,G,L),
+	append(L,S,R).
+empty(X-X).
+get([H|T]-X,H,T-X).
+

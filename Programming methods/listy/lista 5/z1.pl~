@@ -1,0 +1,5 @@
+appn(X,Y):-appn(X,Y,X).
+appn(_,Y,Y).
+appn([H|T],Y,Exit):-
+	append(H,Z,Exit),
+	appn(T,Y,Z).
